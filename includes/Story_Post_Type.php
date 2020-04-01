@@ -278,13 +278,12 @@ class Story_Post_Type {
 
 		$asset_file   = WEBSTORIES_PLUGIN_DIR_PATH . 'assets/js/' . self::WEB_STORIES_SCRIPT_HANDLE . '.asset.php';
 		$asset        = is_readable( $asset_file ) ? require $asset_file : [];
-		$dependencies = isset( $asset['dependencies'] ) ? $asset['dependencies'] : [];
 		$version      = isset( $asset['version'] ) ? $asset['version'] : [];
 
 		wp_enqueue_script(
 			self::WEB_STORIES_SCRIPT_HANDLE,
 			WEBSTORIES_PLUGIN_DIR_URL . 'assets/js/' . self::WEB_STORIES_SCRIPT_HANDLE . '.js',
-			$dependencies,
+			[ 'wp-i18n', 'wp-api-fetch', 'moment' ],
 			$version,
 			false
 		);

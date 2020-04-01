@@ -109,13 +109,12 @@ class Dashboard {
 
 		$asset_file   = WEBSTORIES_PLUGIN_DIR_PATH . 'assets/js/' . self::SCRIPT_HANDLE . '.asset.php';
 		$asset        = is_readable( $asset_file ) ? require $asset_file : [];
-		$dependencies = isset( $asset['dependencies'] ) ? $asset['dependencies'] : [];
 		$version      = isset( $asset['version'] ) ? $asset['version'] : WEBSTORIES_VERSION;
 
 		wp_enqueue_script(
 			self::SCRIPT_HANDLE,
 			WEBSTORIES_PLUGIN_DIR_URL . 'assets/js/' . self::SCRIPT_HANDLE . '.js',
-			$dependencies,
+			[ 'wp-i18n', 'wp-api-fetch', 'moment' ],
 			$version,
 			false
 		);
@@ -129,7 +128,7 @@ class Dashboard {
 					'post_type' => Story_Post_Type::POST_TYPE_SLUG,
 				],
 				'post-new.php'
-			) 
+			)
 		);
 
 		wp_localize_script(
