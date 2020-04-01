@@ -31,7 +31,7 @@ import getMediaSizePositionProps from './getMediaSizePositionProps';
  * Returns AMP HTML for saving into post content for displaying in the FE.
  */
 function MediaOutput({
-  element: { resource, scale, focalX, focalY },
+  element: { resource },
   box: { width: vw, height: vh },
   children,
 }) {
@@ -39,14 +39,7 @@ function MediaOutput({
   // aspect ratio.
   const width = vw;
   const height = (vh * PAGE_HEIGHT) / PAGE_WIDTH;
-  const mediaProps = getMediaSizePositionProps(
-    resource,
-    width,
-    height,
-    scale,
-    focalX,
-    focalY
-  );
+  const mediaProps = getMediaSizePositionProps(resource, width, height);
 
   const wrapperStyle = {
     position: 'absolute',

@@ -20,25 +20,15 @@
  * @param {Object} resource   Media resource.
  * @param {number} width      Original width.
  * @param {number} height     Original height.
- * @param {number} scale      Scale, 100 is the default.
- * @param {number} focalX     X axis focal point.
- * @param {number} focalY     Y axis focal point.
  * @return {Object} Media properties.
  */
-function getMediaSizePositionProps(
-  resource,
-  width,
-  height,
-  scale,
-  focalX,
-  focalY
-) {
+function getMediaSizePositionProps(resource, width, height) {
   const ratio = width / height;
   const oRatio =
     resource.width && resource.height ? resource.width / resource.height : 1;
-  scale = Math.max(scale || 100, 100);
-  focalX = typeof focalX === 'number' ? focalX : 50;
-  focalY = typeof focalY === 'number' ? focalY : 50;
+  const scale = Math.max(resource.scale || 100, 100);
+  const focalX = typeof resource.focalX === 'number' ? resource.focalX : 50;
+  const focalY = typeof resource.focalY === 'number' ? resource.focalY : 50;
   const mediaWidth = (oRatio <= ratio ? width : height * oRatio) * scale * 0.01;
   const mediaHeight =
     (oRatio <= ratio ? width / oRatio : height) * scale * 0.01;

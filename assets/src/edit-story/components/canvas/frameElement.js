@@ -109,7 +109,9 @@ function FrameElement({ element }) {
         <WithMask element={element} fill={true}>
           {Frame ? (
             <Frame wrapperRef={elementRef} element={element} box={box} />
-          ) : null}
+          ) : (
+            <div />
+          )}
         </WithMask>
       </WithLink>
     </Wrapper>

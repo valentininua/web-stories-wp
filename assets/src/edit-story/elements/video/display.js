@@ -44,16 +44,7 @@ const Image = styled.img`
 `;
 
 function VideoDisplay({ previewMode, box: { width, height }, element }) {
-  const {
-    id,
-    poster,
-    resource,
-    isBackground,
-    scale,
-    focalX,
-    focalY,
-    loop,
-  } = element;
+  const { id, poster, resource, isBackground, loop } = element;
   const ref = useRef();
   let style = {};
   if (isBackground) {
@@ -64,14 +55,7 @@ function VideoDisplay({ previewMode, box: { width, height }, element }) {
     };
   }
 
-  const videoProps = getMediaSizePositionProps(
-    resource,
-    width,
-    height,
-    scale,
-    focalX,
-    focalY
-  );
+  const videoProps = getMediaSizePositionProps(resource, width, height);
   return (
     <MediaDisplay element={element} mediaRef={ref}>
       {previewMode ? (

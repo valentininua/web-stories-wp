@@ -34,18 +34,11 @@ const Img = styled.img`
 `;
 
 function ImageDisplay({ element, box }) {
-  const { resource, scale, focalX, focalY } = element;
+  const { resource } = element;
   const { width, height } = box;
   const ref = useRef();
 
-  const imgProps = getMediaSizePositionProps(
-    resource,
-    width,
-    height,
-    scale,
-    focalX,
-    focalY
-  );
+  const imgProps = getMediaSizePositionProps(resource, width, height);
 
   return (
     <MediaDisplay element={element} mediaRef={ref}>

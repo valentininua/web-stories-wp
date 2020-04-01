@@ -40,6 +40,7 @@ function EditCropMovable({
   width,
   height,
   rotationAngle,
+  resource,
   offsetX,
   offsetY,
   mediaWidth,
@@ -128,13 +129,16 @@ function EditCropMovable({
           offsetY + fy
         );
         setProperties({
+          resource: {
+            ...resource,
+            scale: resizeScale,
+            focalX: flip?.horizontal ? 100 - resizeFocalX : resizeFocalX,
+            focalY: flip?.vertical ? 100 - resizeFocalY : resizeFocalY,
+          },
           x: editorToDataX(x + dx),
           y: editorToDataY(y + dy),
           width: editorToDataX(resizeWidth),
           height: editorToDataY(resizeHeight),
-          scale: resizeScale,
-          focalX: flip?.horizontal ? 100 - resizeFocalX : resizeFocalX,
-          focalY: flip?.vertical ? 100 - resizeFocalY : resizeFocalY,
         });
       }}
       snappable={true}
@@ -149,6 +153,7 @@ EditCropMovable.propTypes = {
   setProperties: PropTypes.func.isRequired,
   cropBox: PropTypes.object.isRequired,
   croppedMedia: PropTypes.object.isRequired,
+  resource: StoryPropTypes.resource,
   flip: StoryPropTypes.flip,
   x: PropTypes.number.isRequired,
   y: PropTypes.number.isRequired,

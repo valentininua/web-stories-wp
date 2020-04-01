@@ -34,11 +34,7 @@ const Element = styled.div`
   overflow: hidden;
 `;
 
-function MediaDisplay({
-  element: { id, resource, scale, focalX, focalY },
-  mediaRef,
-  children,
-}) {
+function MediaDisplay({ element: { id, resource }, mediaRef, children }) {
   useTransformHandler(id, (transform) => {
     const target = mediaRef.current;
     if (mediaRef.current) {
@@ -50,10 +46,7 @@ function MediaDisplay({
           const newImgProps = getMediaSizePositionProps(
             resource,
             resize[0],
-            resize[1],
-            scale,
-            focalX,
-            focalY
+            resize[1]
           );
           target.style.cssText = getMediaWithScaleCss(newImgProps);
         }
@@ -64,7 +57,7 @@ function MediaDisplay({
 }
 
 MediaDisplay.propTypes = {
-  element: StoryPropTypes.elements.media,
+  element: StoryPropTypes.elements.media.isRequired,
   mediaRef: PropTypes.object,
   children: StoryPropTypes.children.isRequired,
 };

@@ -51,12 +51,12 @@ export const CropBox = styled.div`
 export const MEDIA_MASK_OPACITY = 0.4;
 
 export const MEDIA_DEFAULT_ATTRIBUTES = {
-  scale: 100,
-  focalX: 50,
-  focalY: 50,
   isFill: false,
   resource: {
     alt: '',
+    scale: 100,
+    focalX: 50,
+    focalY: 50,
   },
 };
 

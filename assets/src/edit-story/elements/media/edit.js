@@ -81,18 +81,7 @@ const CropVideo = styled.video`
 `;
 
 function MediaEdit({ element, box }) {
-  const {
-    id,
-    resource,
-    opacity,
-    scale,
-    flip,
-    focalX,
-    focalY,
-    isFill,
-    isBackground,
-    type,
-  } = element;
+  const { id, resource, opacity, flip, isFill, isBackground, type } = element;
   const { x, y, width, height, rotationAngle } = box;
   const [fullMedia, setFullMedia] = useState(null);
   const [croppedMedia, setCroppedMedia] = useState(null);
@@ -107,12 +96,13 @@ function MediaEdit({ element, box }) {
   );
 
   const mediaProps = getMediaSizePositionProps(
-    resource,
+    {
+      ...resource,
+      focalX: flip?.horizontal ? 100 - resource.focalX : resource.focalX,
+      focalY: flip?.vertical ? 100 - resource.focalY : resource.focalY,
+    },
     width,
-    height,
-    scale,
-    flip?.horizontal ? 100 - focalX : focalX,
-    flip?.vertical ? 100 - focalY : focalY
+    height
   );
 
   mediaProps.transformFlip = getTransformFlip(flip);
@@ -164,6 +154,7 @@ function MediaEdit({ element, box }) {
           width={width}
           height={height}
           rotationAngle={rotationAngle}
+          resource={resource}
           offsetX={mediaProps.offsetX}
           offsetY={mediaProps.offsetY}
           mediaWidth={mediaProps.width}
@@ -182,6 +173,7 @@ function MediaEdit({ element, box }) {
           width={width}
           height={height}
           rotationAngle={rotationAngle}
+          resource={resource}
           offsetX={mediaProps.offsetX}
           offsetY={mediaProps.offsetY}
           mediaWidth={mediaProps.width}
@@ -195,7 +187,7 @@ function MediaEdit({ element, box }) {
         y={y}
         width={width}
         height={height}
-        scale={scale || 100}
+        scale={resource.scale || 100}
       />
     </Element>
   );

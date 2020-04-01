@@ -113,6 +113,9 @@ StoryPropTypes.imageResource = PropTypes.shape({
   height: PropTypes.number.isRequired,
   alt: PropTypes.string,
   title: PropTypes.string,
+  scale: PropTypes.number.isRequired,
+  focalX: PropTypes.number,
+  focalY: PropTypes.number,
 });
 
 StoryPropTypes.videoResource = PropTypes.shape({
@@ -126,6 +129,9 @@ StoryPropTypes.videoResource = PropTypes.shape({
   posterId: PropTypes.number,
   alt: PropTypes.string,
   title: PropTypes.string,
+  scale: PropTypes.number.isRequired,
+  focalX: PropTypes.number,
+  focalY: PropTypes.number,
 });
 
 StoryPropTypes.resource = PropTypes.oneOfType([
@@ -164,26 +170,22 @@ StoryPropTypes.layer = PropTypes.shape(StoryLayerPropTypes);
 
 StoryPropTypes.elements = {};
 
-StoryPropTypes.elements.media = PropTypes.shape({
-  ...StoryElementPropTypes,
-  scale: PropTypes.number.isRequired,
-  focalX: PropTypes.number,
-  focalY: PropTypes.number,
-});
-
 StoryPropTypes.elements.image = PropTypes.shape({
   ...StoryElementPropTypes,
-  ...StoryPropTypes.elements.media,
   resource: StoryPropTypes.imageResource,
 });
 
 StoryPropTypes.elements.video = PropTypes.shape({
   ...StoryElementPropTypes,
-  ...StoryPropTypes.elements.media,
   resource: StoryPropTypes.videoResource,
   poster: PropTypes.string,
   loop: PropTypes.bool,
 });
+
+StoryPropTypes.elements.media = PropTypes.oneOf([
+  StoryPropTypes.elements.image,
+  StoryPropTypes.elements.video,
+]);
 
 StoryPropTypes.elements.text = PropTypes.shape({
   ...StoryElementPropTypes,

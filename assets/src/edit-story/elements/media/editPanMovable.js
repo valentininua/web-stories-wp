@@ -38,6 +38,7 @@ function EditPanMovable({
   width,
   height,
   rotationAngle,
+  resource,
   offsetX,
   offsetY,
   mediaWidth,
@@ -86,8 +87,11 @@ function EditPanMovable({
         const panFocalX = getFocalFromOffset(width, mediaWidth, offsetX - tx);
         const panFocalY = getFocalFromOffset(height, mediaHeight, offsetY - ty);
         setProperties({
-          focalX: flip?.horizontal ? 100 - panFocalX : panFocalX,
-          focalY: flip?.vertical ? 100 - panFocalY : panFocalY,
+          resource: {
+            ...resource,
+            focalX: flip?.horizontal ? 100 - panFocalX : panFocalX,
+            focalY: flip?.vertical ? 100 - panFocalY : panFocalY,
+          },
         });
         update();
       }}
@@ -122,6 +126,7 @@ EditPanMovable.propTypes = {
   setProperties: PropTypes.func.isRequired,
   fullMedia: PropTypes.object.isRequired,
   croppedMedia: PropTypes.object.isRequired,
+  resource: StoryPropTypes.resource,
   flip: StoryPropTypes.flip,
   x: PropTypes.number.isRequired,
   y: PropTypes.number.isRequired,
