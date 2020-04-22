@@ -40,6 +40,12 @@ const StyledInput = styled(Input)`
   padding-left: ${({ label }) => (label ? 6 : 0)}px;
   letter-spacing: ${({ theme }) => theme.fonts.body2.letterSpacing};
   ${({ textCenter }) => textCenter && `text-align: center`};
+  ${({ color, theme }) =>
+    color &&
+    color === 'white' &&
+    `
+    color: ${theme.colors.fg.v0}
+  `};
 `;
 
 const Container = styled.div`
@@ -91,6 +97,7 @@ function TextInput({
   disabled,
   clear,
   placeholder,
+  forwardedRef,
   ...rest
 }) {
   const isMultiple = value === MULTIPLE_VALUE;
@@ -104,6 +111,7 @@ function TextInput({
       disabled={disabled}
     >
       <StyledInput
+        ref={forwardedRef}
         placeholder={placeholder}
         label={label}
         value={value}
@@ -155,6 +163,7 @@ TextInput.propTypes = {
   clear: PropTypes.bool,
   ariaLabel: PropTypes.string,
   placeholder: PropTypes.string,
+  forwardedRef: PropTypes.object,
 };
 
 TextInput.defaultProps = {
