@@ -223,23 +223,6 @@ function APIProvider({ children }) {
     return apiFetch({ path: addQueryArgs(users, { per_page: '-1' }) });
   }, [users]);
 
-  const getMenuFonts = useCallback((fontList) => {
-    const googleMenuFontsUrl = 'https://fonts.googleapis.com/css';
-    return fetch(
-      `${googleMenuFontsUrl}?family=${fontList.join('|')}&subset=menu`
-    )
-      .then((response) => response.body)
-      .then((body) => {
-        return body
-          .getReader()
-          .read()
-          .then(({ value }) => {
-            const decoder = new TextDecoder('utf-8');
-            return decoder.decode(value).replace(/::MENU/g, '');
-          });
-      });
-  }, []);
-
   const state = {
     actions: {
       getStoryById,
@@ -252,7 +235,6 @@ function APIProvider({ children }) {
       getAllUsers,
       uploadMedia,
       updateMedia,
-      getMenuFonts,
     },
   };
 

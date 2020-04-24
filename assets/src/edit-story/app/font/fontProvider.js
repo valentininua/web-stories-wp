@@ -18,7 +18,7 @@
  * External dependencies
  */
 import PropTypes from 'prop-types';
-import { useCallback, useState } from 'react';
+import { useCallback, useState, useEffect } from 'react';
 
 /**
  * WordPress dependencies
@@ -35,6 +35,7 @@ import useLoadFontFiles from './actions/useLoadFontFiles';
 
 function FontProvider({ children }) {
   const [fonts, setFonts] = useState([]);
+  const [fontFaces, setFontFaces] = useState([]);
 
   useLoadFonts({ fonts, setFonts });
 
@@ -105,11 +106,38 @@ function FontProvider({ children }) {
     [getFontByName]
   );
 
+  const getMenuFonts = useCallback((fontList) => {
+    const googleMenuFontsUrl = 'https://fonts.googleapis.com/css';
+    return fetch(
+      `${googleMenuFontsUrl}?family=${fontList.join('|')}&subset=menu`
+    )
+      .then((response) => response.body)
+      .then((body) => {
+        return body
+          .getReader()
+          .read()
+          .then(({ value }) => {
+            const decoder = new TextDecoder('utf-8');
+            return decoder.decode(value).replace(/::MENU/g, '');
+          });
+      });
+  }, []);
+
+  useEffect(() => {
+    if (fonts?.length > 0) {
+      getMenuFonts(fonts.map((font) => font.name)).then((result) => {
+        const resultArray = result.replace(/}/g, '}},').split('},');
+        setFontFaces(resultArray);
+      });
+    }
+  }, [fonts, getMenuFonts]);
+
   const maybeEnqueueFontStyle = useLoadFontFiles({ getFontByName });
 
   const state = {
     state: {
       fonts,
+      fontFaces,
     },
     actions: {
       getFontByName,
@@ -117,6 +145,7 @@ function FontProvider({ children }) {
       maybeEnqueueFontStyle,
       getFontWeight,
       getFontFallback,
+      getMenuFonts,
     },
   };
 
