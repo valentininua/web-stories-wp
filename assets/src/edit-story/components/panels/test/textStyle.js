@@ -28,6 +28,7 @@ import FontContext from '../../../app/font/context';
 import { calculateTextHeight } from '../../../utils/textMeasurements';
 import calcRotatedResizeOffset from '../../../utils/calcRotatedResizeOffset';
 import DropDown from '../../form/dropDown';
+import FontPicker from '../../fontPicker';
 import ColorInput from '../../form/color/color';
 import createSolid from '../../../utils/createSolid';
 import { MULTIPLE_VALUE } from '../../form';
@@ -35,6 +36,7 @@ import { renderPanel } from './_utils';
 
 jest.mock('../../../utils/textMeasurements');
 jest.mock('../../form/dropDown');
+jest.mock('../../fontPicker');
 jest.mock('../../form/color/color');
 
 const DEFAULT_PADDING = { horizontal: 0, vertical: 0, locked: true };
@@ -91,6 +93,7 @@ describe('Panels/TextStyle', () => {
 
     controls = {};
     DropDown.mockImplementation(FakeControl);
+    FontPicker.mockImplementation(FakeControl);
     ColorInput.mockImplementation(FakeControl);
   });
 
