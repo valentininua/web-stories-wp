@@ -64,8 +64,6 @@ function FontControls({ selectedElements, pushUpdate }) {
         <Row>
           <FontPicker
             data-testid="font"
-            ariaLabel={__('Font family', 'web-stories')}
-            options={fonts}
             value={fontFamily}
             onChange={(value) => {
               const currentFontWeights = getFontWeight(value);
