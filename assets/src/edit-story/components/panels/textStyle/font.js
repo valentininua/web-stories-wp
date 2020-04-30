@@ -34,6 +34,7 @@ import FontPicker from '../../fontPicker';
 import { PAGE_HEIGHT } from '../../../constants';
 import { useFont } from '../../../app/font';
 import { getCommonValue } from '../utils';
+import objectPick from '../../../utils/objectPick';
 
 const Space = styled.div`
   flex: 0 0 10px;
@@ -44,17 +45,39 @@ const BoxedNumeric = styled(Numeric)`
   border-radius: 4px;
 `;
 
+const getFontWeights = ({ weights }) => {
+  const fontWeightNames = {
+    100: __('Thin', 'web-stories'),
+    200: __('Extra-light', 'web-stories'),
+    300: __('Light', 'web-stories'),
+    400: __('Regular', 'web-stories'),
+    500: __('Medium', 'web-stories'),
+    600: __('Semi-bold', 'web-stories'),
+    700: __('Bold', 'web-stories'),
+    800: __('Extra-bold', 'web-stories'),
+    900: __('Black', 'web-stories'),
+  };
+
+  return weights.map((weight) => ({
+    name: fontWeightNames[weight],
+    value: weight.toString(),
+  }));
+};
+
 function FontControls({ selectedElements, pushUpdate }) {
-  const fontFamily = getCommonValue(selectedElements, 'fontFamily');
+  const fontFamily = getCommonValue(
+    selectedElements,
+    ({ font }) => font?.family
+  );
   const fontSize = getCommonValue(selectedElements, 'fontSize');
   const fontWeight = getCommonValue(selectedElements, 'fontWeight');
 
   const {
     state: { fonts },
-    actions: { getFontWeight, getFontFallback },
+    actions: { getFontByName },
   } = useFont();
-  const fontWeights = useMemo(() => getFontWeight(fontFamily), [
-    getFontWeight,
+  const fontWeights = useMemo(() => getFontWeights(getFontByName(fontFamily)), [
+    getFontByName,
     fontFamily,
   ]);
 
@@ -66,27 +89,30 @@ function FontControls({ selectedElements, pushUpdate }) {
             data-testid="font"
             value={fontFamily}
             onChange={(value) => {
-              const currentFontWeights = getFontWeight(value);
-              const currentFontFallback = getFontFallback(value);
-              const fontWeightsArr = currentFontWeights.map(
-                ({ value: weight }) => weight
-              );
+              const fontObj = fonts.find((item) => item.value === value);
+              const { weights } = fontObj;
 
               // Find the nearest font weight from the available font weight list
-              // If no fontweightsArr available then will return undefined
-              const newFontWeight =
-                fontWeightsArr &&
-                fontWeightsArr.reduce((a, b) =>
-                  Math.abs(parseInt(b) - fontWeight) <
-                  Math.abs(parseInt(a) - fontWeight)
-                    ? b
-                    : a
-                );
+              const newFontWeight = weights.reduce((a, b) =>
+                Math.abs(parseInt(b) - fontWeight) <
+                Math.abs(parseInt(a) - fontWeight)
+                  ? b
+                  : a
+              );
+
               pushUpdate(
                 {
-                  fontFamily: value,
+                  font: {
+                    family: value,
+                    ...objectPick(fontObj, [
+                      'service',
+                      'fallbacks',
+                      'weights',
+                      'styles',
+                      'variants',
+                    ]),
+                  },
                   fontWeight: parseInt(newFontWeight),
-                  fontFallback: currentFontFallback,
                 },
                 true
               );
