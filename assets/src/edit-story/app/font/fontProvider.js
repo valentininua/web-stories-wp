@@ -139,7 +139,6 @@ function FontProvider({ children }) {
   const state = {
     state: {
       fonts,
-      // fontFaces,
       recentUsedFontSlugs,
     },
     actions: {
