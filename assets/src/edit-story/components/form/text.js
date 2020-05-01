@@ -20,6 +20,7 @@
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { rgba } from 'polished';
+import { forwardRef } from 'react';
 
 /**
  * WordPress dependencies
@@ -86,20 +87,22 @@ const CloseIcon = styled(Close)`
   height: 12px;
 `;
 
-function TextInput({
-  className,
-  onBlur,
-  onChange,
-  label,
-  value,
-  flexBasis,
-  ariaLabel,
-  disabled,
-  clear,
-  placeholder,
-  forwardedRef,
-  ...rest
-}) {
+function TextInputWithRef(
+  {
+    className,
+    onBlur,
+    onChange,
+    label,
+    value,
+    flexBasis,
+    ariaLabel,
+    disabled,
+    clear,
+    placeholder,
+    ...rest
+  },
+  ref
+) {
   const isMultiple = value === MULTIPLE_VALUE;
   value = isMultiple ? '' : value;
   placeholder = isMultiple ? __('multiple', 'web-stories') : placeholder;
@@ -111,7 +114,7 @@ function TextInput({
       disabled={disabled}
     >
       <StyledInput
-        ref={forwardedRef}
+        ref={ref}
         placeholder={placeholder}
         label={label}
         value={value}
@@ -151,6 +154,8 @@ function TextInput({
   );
 }
 
+const TextInput = forwardRef(TextInputWithRef);
+
 TextInput.propTypes = {
   className: PropTypes.string,
   label: PropTypes.string,
@@ -163,7 +168,6 @@ TextInput.propTypes = {
   clear: PropTypes.bool,
   ariaLabel: PropTypes.string,
   placeholder: PropTypes.string,
-  forwardedRef: PropTypes.object,
 };
 
 TextInput.defaultProps = {
@@ -175,5 +179,7 @@ TextInput.defaultProps = {
   ariaLabel: __('Standard input', 'web-stories'),
   placeholder: null,
 };
+
+TextInputWithRef.propTypes = TextInput.propTypes;
 
 export default TextInput;
