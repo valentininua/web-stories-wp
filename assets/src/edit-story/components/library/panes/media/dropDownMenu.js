@@ -19,7 +19,7 @@
  */
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
-import { useState, useRef } from 'react';
+import { useEffect, useState, useRef } from 'react';
 
 /**
  * WordPress dependencies
@@ -84,6 +84,8 @@ function DropDownMenu({ showDisplayIcon, menuCallback }) {
     setShowMenu(false);
     menuCallback(showMenu);
   };
+
+  useEffect(() => menuCallback(showMenu), [showMenu, menuCallback]);
 
   // Keep icon and menu displayed if menu is open (even if user's mouse leaves the area).
   return (
