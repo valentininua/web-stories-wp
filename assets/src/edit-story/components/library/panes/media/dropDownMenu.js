@@ -38,7 +38,7 @@ const MoreIcon = styled(More)`
   width: 28px;
 `;
 
-const Div = styled.div`
+const IconContainer = styled.div`
   position: absolute;
   top: 8px;
   right: 8px;
@@ -83,14 +83,14 @@ function DropDownMenu({ showDisplayIcon, menuCallback }) {
   return (
     (showDisplayIcon || showMenu) && (
       <>
-        <Div ref={moreRef}>
+        <IconContainer ref={moreRef}>
           <MoreIcon
             onClick={onClickMoreIcon}
             aria-pressed={showMenu}
             aria-haspopup={true}
             aria-expanded={showMenu}
           />
-        </Div>
+        </IconContainer>
         <Popup anchor={moreRef} isOpen={showMenu} width={160}>
           <DropDownList
             handleCurrentValue={handleCurrentValue}
