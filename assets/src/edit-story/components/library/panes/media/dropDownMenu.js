@@ -53,8 +53,8 @@ const IconContainer = styled.div`
  */
 function DropDownMenu({ showDisplayIcon, menuCallback }) {
   const options = [
-    { name: __('Edit', 'web-stories'), value: 'Edit' },
-    { name: __('Delete', 'web-stories'), value: 'Delete' },
+    { name: __('Edit', 'web-stories'), value: 'edit' },
+    { name: __('Delete', 'web-stories'), value: 'delete' },
   ];
 
   const [showMenu, setShowMenu] = useState(false);
@@ -64,10 +64,10 @@ function DropDownMenu({ showDisplayIcon, menuCallback }) {
   const handleCurrentValue = (value) => {
     setShowMenu(false);
     switch (value) {
-      case 'Edit':
+      case 'edit':
         // TODO(#354): Edit Media Metadata via Media Library Hover Menu
         break;
-      case 'Delete':
+      case 'delete':
         // TODO(#1319): Media Library - Delete via Dropdown Menu from Hover
         break;
       default:
