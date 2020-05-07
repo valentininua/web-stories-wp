@@ -19,7 +19,7 @@
  */
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
-import { useEffect, useState, useRef } from 'react';
+import { useState, useRef } from 'react';
 
 /**
  * WordPress dependencies
@@ -47,8 +47,9 @@ const IconContainer = styled.div`
 /**
  * Get a More icon that displays a dropdown menu on click.
  *
- * @param {boolean} showDisplayIcon If the More icon should be displayed
- * @param {function(boolean)} menuCallback Callback for when menu is opened / closed.
+ * @param {Object} props Component props.
+ * @param {boolean} props.showDisplayIcon If the More icon should be displayed
+ * @param {function(boolean)} props.menuCallback Callback for when menu is opened / closed.
  * @return {null|*} Element or null if should not display the More icon.
  */
 function DropDownMenu({ showDisplayIcon, menuCallback }) {
@@ -60,9 +61,13 @@ function DropDownMenu({ showDisplayIcon, menuCallback }) {
   const [showMenu, setShowMenu] = useState(false);
   const moreRef = useRef();
 
-  const onClickMoreIcon = () => setShowMenu(true);
+  const onClickMoreIcon = () => {
+    setShowMenu(true);
+    menuCallback(showMenu);
+  };
   const handleCurrentValue = (value) => {
     setShowMenu(false);
+    menuCallback(showMenu);
     switch (value) {
       case 'edit':
         // TODO(#354): Edit Media Metadata via Media Library Hover Menu
@@ -75,9 +80,10 @@ function DropDownMenu({ showDisplayIcon, menuCallback }) {
     }
   };
 
-  const toggleOptions = () => setShowMenu(false);
-
-  useEffect(() => menuCallback(showMenu), [showMenu, menuCallback]);
+  const toggleOptions = () => {
+    setShowMenu(false);
+    menuCallback(showMenu);
+  };
 
   // Keep icon and menu displayed if menu is open (even if user's mouse leaves the area).
   return (
