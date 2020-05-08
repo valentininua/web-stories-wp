@@ -25,6 +25,7 @@ tests
 .stylelintignore
 .stylelintrc
 .svgo.yml
+.test_artifacts
 .travis.yml
 .travis_deploy_key
 .travis_deploy_key.enc
@@ -37,6 +38,7 @@ jest-puppeteer.config.js
 karma.config.js
 package.json
 package-lock.json
+percy.config.yml
 phpcs.xml
 phpstan.neon.dist
 phpunit.xml.dist
