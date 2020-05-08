@@ -189,6 +189,8 @@ const MediaElement = ({
 
   if (type === 'image') {
     // TODO: Set to `true` when Edit and Delete have been fully implemented and merged.
+    // Currently we don't have feature flags (#1464) so this is a simple way to keep this feature
+    // hidden until fully implemented.
     const onPointerEnterImage = () => setShowMoreIcon(false);
     const onPointerLeaveImage = () => setShowMoreIcon(false);
 
@@ -245,6 +247,8 @@ const MediaElement = ({
       mediaElement.current.play();
     }
     // TODO: Set to `true` when Edit and Delete have been fully implemented and merged.
+    // Currently we don't have feature flags (#1464) so this is a simple way to keep this feature
+    // hidden until fully implemented.
     setShowMoreIcon(false);
   };
 
