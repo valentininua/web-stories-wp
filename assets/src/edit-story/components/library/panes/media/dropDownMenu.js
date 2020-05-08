@@ -29,6 +29,7 @@ import { __ } from '@wordpress/i18n';
 /**
  * Internal dependencies
  */
+import { useAPI } from '../../../../app/api';
 import DropDownList from '../../../../components/form/dropDown/list';
 import Popup from '../../../../components/popup';
 import { ReactComponent as More } from '../../../../icons/more_horiz.svg';
@@ -48,23 +49,43 @@ const IconContainer = styled.div`
  * Get a More icon that displays a dropdown menu on click.
  *
  * @param {Object} props Component props.
- * @param {boolean} props.showDisplayIcon If the More icon should be displayed
+ * @param {number} props.mediaId Selected media element.
+ * @param {boolean} props.showDisplayIcon If the More icon should be displayed.
  * @param {function(boolean)} props.menuCallback Callback for when menu is opened / closed.
  * @return {null|*} Element or null if should not display the More icon.
  */
-function DropDownMenu({ showDisplayIcon, menuCallback }) {
+function DropDownMenu({ mediaId, showDisplayIcon, menuCallback }) {
+  const {
+    actions: { deleteMedia },
+  } = useAPI();
   const options = [
     { name: __('Edit', 'web-stories'), value: 'edit' },
     { name: __('Delete', 'web-stories'), value: 'delete' },
   ];
 
   const [showMenu, setShowMenu] = useState(false);
+  const [shouldDelete, setShouldDelete] = useState(false);
   const moreRef = useRef();
 
   const onClickMoreIcon = () => {
     setShowMenu(true);
     menuCallback(showMenu);
   };
+
+  useEffect(() => {
+    const deleteMediaItem = async () => {
+      try {
+        await deleteMedia(mediaId);
+        // TODO Refresh media library
+      } catch (err) {
+        // TODO Display error message
+      } finally {
+        setShouldDelete(false);
+      }
+    };
+    shouldDelete ? deleteMediaItem() : null;
+  }, [deleteMedia, mediaId, shouldDelete]);
+
   const handleCurrentValue = (value) => {
     setShowMenu(false);
     menuCallback(showMenu);
@@ -73,7 +94,7 @@ function DropDownMenu({ showDisplayIcon, menuCallback }) {
         // TODO(#354): Edit Media Metadata via Media Library Hover Menu
         break;
       case 'delete':
-        // TODO(#1319): Media Library - Delete via Dropdown Menu from Hover
+        setShouldDelete(true);
         break;
       default:
         break;
@@ -112,6 +133,7 @@ function DropDownMenu({ showDisplayIcon, menuCallback }) {
 }
 
 DropDownMenu.propTypes = {
+  mediaId: PropTypes.number,
   showDisplayIcon: PropTypes.bool,
   menuCallback: PropTypes.func,
 };

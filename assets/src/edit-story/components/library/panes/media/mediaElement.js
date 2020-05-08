@@ -234,6 +234,7 @@ const MediaElement = ({
           </CSSTransition>
         )}
         <DropDownMenu
+          mediaId={resource.id}
           showDisplayIcon={showMoreIcon}
           menuCallback={menuCallback}
         />
@@ -293,6 +294,7 @@ const MediaElement = ({
         </CSSTransition>
       )}
       <DropDownMenu
+        mediaId={resource.id}
         showDisplayIcon={showMoreIcon}
         menuCallback={menuCallback}
       />
