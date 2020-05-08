@@ -188,7 +188,8 @@ const MediaElement = ({
   };
 
   if (type === 'image') {
-    const onPointerEnterImage = () => setShowMoreIcon(true);
+    // TODO: Set to `true` when Edit and Delete have been fully implemented and merged.
+    const onPointerEnterImage = () => setShowMoreIcon(false);
     const onPointerLeaveImage = () => setShowMoreIcon(false);
 
     let imageSrc = src;
@@ -243,7 +244,8 @@ const MediaElement = ({
     if (mediaElement.current) {
       mediaElement.current.play();
     }
-    setShowMoreIcon(true);
+    // TODO: Set to `true` when Edit and Delete have been fully implemented and merged.
+    setShowMoreIcon(false);
   };
 
   const onPointerLeaveVideo = () => {
