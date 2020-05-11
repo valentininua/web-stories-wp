@@ -37,7 +37,7 @@ import {
 import usePreventWindowUnload from '../../../utils/usePreventWindowUnload';
 import createError from '../../../utils/createError';
 
-function useUploadMedia({ media, pagingNum, mediaType, fetchMedia, setMedia }) {
+function useUploadMedia({ mediaStateProvider, fetchMedia, setMedia }) {
   const { uploadFile, isValidType } = useUploader();
   const { showSnackbar } = useSnackbar();
   const { allowedFileTypes } = useConfig();
@@ -46,6 +46,8 @@ function useUploadMedia({ media, pagingNum, mediaType, fetchMedia, setMedia }) {
 
   const uploadMedia = useCallback(
     async (files, { onLocalFile, onUploadedFile, onUploadFailure } = {}) => {
+      const { media, pagingNum, mediaType } = mediaStateProvider();
+
       let localFiles;
       try {
         setIsUploading(true);
@@ -137,13 +139,11 @@ function useUploadMedia({ media, pagingNum, mediaType, fetchMedia, setMedia }) {
       }
     },
     [
+      mediaStateProvider,
       setMedia,
-      media,
       showSnackbar,
       allowedFileTypes,
       fetchMedia,
-      pagingNum,
-      mediaType,
       uploadFile,
       isValidType,
       setPreventUnload,

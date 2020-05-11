@@ -87,9 +87,7 @@ describe('useUploadMedia', () => {
 
     const { result } = renderHook(() =>
       useUploadMedia({
-        media,
-        pagingNum,
-        mediaType,
+        mediaStateProvider: () => ({ media, pagingNum, mediaType }),
         fetchMedia,
         setMedia,
       })

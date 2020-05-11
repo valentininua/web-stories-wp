@@ -18,7 +18,7 @@
  * External dependencies
  */
 import PropTypes from 'prop-types';
-import { useEffect, useCallback } from 'react';
+import { useEffect, useCallback, useRef } from 'react';
 
 /**
  * Internal dependencies
@@ -56,8 +56,17 @@ function MediaProvider({ children }) {
   const {
     actions: { getMedia },
   } = useAPI();
+
+  // Used by callbacks to avoid unnecessary dependency on state changes,
+  // which cause re-renderings.
+  const stateRef = useRef();
+  stateRef.current = state;
+
   const fetchMedia = useCallback(
     ({ pagingNum: p = 1, mediaType: currentMediaType } = {}, callback) => {
+      // eslint-disable-next-line no-shadow
+      const { searchTerm } = stateRef.current;
+
       fetchMediaStart({ pagingNum: p });
       getMedia({ mediaType: currentMediaType, searchTerm, pagingNum: p })
         .then(({ data, headers }) => {
@@ -73,11 +82,17 @@ function MediaProvider({ children }) {
         })
         .catch(fetchMediaError);
     },
-    [fetchMediaError, fetchMediaStart, getMedia, searchTerm]
+    [fetchMediaError, fetchMediaStart, getMedia]
   );
   const { uploadMedia, isUploading } = useUploadMedia({
-    media,
-    pagingNum,
+    mediaStateProvider: useCallback(
+      () => ({
+        media: stateRef.current.media,
+        mediaType: stateRef.current.mediaType,
+        pagingNum: stateRef.current.pagingNum,
+      }),
+      []
+    ),
     setMedia,
     fetchMedia,
   });
@@ -93,18 +108,14 @@ function MediaProvider({ children }) {
   } = useConfig();
 
   const resetWithFetch = useCallback(() => {
+    // eslint-disable-next-line no-shadow
+    const { mediaType, pagingNum, searchTerm } = stateRef.current;
+
     resetFilters();
     if (!mediaType && !searchTerm && pagingNum === 1) {
       fetchMedia({ mediaType }, fetchMediaSuccess);
     }
-  }, [
-    fetchMedia,
-    fetchMediaSuccess,
-    mediaType,
-    pagingNum,
-    resetFilters,
-    searchTerm,
-  ]);
+  }, [fetchMedia, fetchMediaSuccess, resetFilters]);
 
   useEffect(() => {
     fetchMedia({ pagingNum, mediaType }, fetchMediaSuccess);
@@ -112,6 +123,9 @@ function MediaProvider({ children }) {
 
   const uploadVideoPoster = useCallback(
     (id, src) => {
+      // eslint-disable-next-line no-shadow
+      const { processed, processing } = stateRef.current;
+
       const process = async () => {
         if (processed.includes(id) || processing.includes(id)) {
           return;
@@ -122,7 +136,7 @@ function MediaProvider({ children }) {
       };
       process();
     },
-    [processed, processing, setProcessing, uploadVideoFrame, removeProcessing]
+    [setProcessing, uploadVideoFrame, removeProcessing]
   );
 
   const processor = useCallback(
@@ -143,6 +157,9 @@ function MediaProvider({ children }) {
   );
 
   const generatePoster = useCallback(() => {
+    // eslint-disable-next-line no-shadow
+    const { media } = stateRef.current;
+
     const looper = async () => {
       await media.reduce((accumulatorPromise, el) => {
         return accumulatorPromise.then(() => el && processor(el));
@@ -151,7 +168,7 @@ function MediaProvider({ children }) {
     if (media) {
       looper();
     }
-  }, [media, processor]);
+  }, [processor]);
 
   useEffect(generatePoster, [media, mediaType, searchTerm]);
 
