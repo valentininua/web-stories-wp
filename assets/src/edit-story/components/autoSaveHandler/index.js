@@ -29,12 +29,16 @@ function AutoSaveHandler() {
   const {
     state: { hasNewChanges },
   } = useHistory();
-  const {
-    state: {
-      story: { status },
-    },
-    actions: { saveStory },
-  } = useStory();
+  const { status, saveStory } = useStory(
+    ({
+      state: {
+        // eslint-disable-next-line no-shadow
+        story: { status },
+      },
+      // eslint-disable-next-line no-shadow
+      actions: { saveStory },
+    }) => ({ status, saveStory })
+  );
 
   const isDraft = 'draft' === status;
 

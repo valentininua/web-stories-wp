@@ -18,7 +18,7 @@
  * External dependencies
  */
 import { shallowEqual } from 'react-pure-render';
-import { useCallback, useRef } from 'react';
+import React, { useCallback, useRef } from 'react';
 import { useContextSelector } from 'use-context-selector';
 
 export { createContext, useContext } from 'use-context-selector';
@@ -33,7 +33,7 @@ export { createContext, useContext } from 'use-context-selector';
  * @param {function(Object, Object):boolean} equalityFn Used to compare the
  * selected context value. If the context fragment has not changed, a re-render
  * will not be triggered.
- * @return {Object}
+ * @return {Object} The selected context fragment.
  */
 const useContextSelectorWithEqFn = (context, selector, equalityFn) => {
   const ref = useRef();
@@ -63,7 +63,7 @@ const useContextSelectorWithEqFn = (context, selector, equalityFn) => {
  * @param {React.Context} context
  * @param {function(Object):Object} selector Returns the part of the context
  * that the consumer is interested in.
- * @return {Object}
+ * @return {Object} The selected context fragment.
  */
 export const useContextSelectorShallow = (context, selector) =>
   useContextSelectorWithEqFn(context, selector, shallowEqual);

@@ -93,12 +93,33 @@ function PublishPanel() {
   } = useInspector();
 
   const {
-    state: {
-      meta: { isSaving },
-      story: { author, date, featuredMediaUrl, publisherLogoUrl },
-    },
-    actions: { updateStory },
-  } = useStory();
+    isSaving,
+    author,
+    date,
+    featuredMediaUrl,
+    publisherLogoUrl,
+    updateStory,
+  } = useStory(
+    ({
+      state: {
+        // eslint-disable-next-line no-shadow
+        meta: { isSaving },
+        // eslint-disable-next-line no-shadow
+        story: { author, date, featuredMediaUrl, publisherLogoUrl },
+      },
+      // eslint-disable-next-line no-shadow
+      actions: { updateStory },
+    }) => {
+      return {
+        isSaving,
+        author,
+        date,
+        featuredMediaUrl,
+        publisherLogoUrl,
+        updateStory,
+      };
+    }
+  );
 
   const { timeFormat, capabilities } = useConfig();
 

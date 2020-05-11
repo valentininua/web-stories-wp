@@ -49,12 +49,16 @@ function StatusPanel() {
     state: { statuses },
   } = useInspector();
 
-  const {
-    state: {
-      story: { status, password },
-    },
-    actions: { updateStory, deleteStory },
-  } = useStory();
+  const { status, password, updateStory, deleteStory } = useStory(
+    ({
+      state: {
+        // eslint-disable-next-line no-shadow
+        story: { status, password },
+      },
+      // eslint-disable-next-line no-shadow
+      actions: { updateStory, deleteStory },
+    }) => ({ status, password, updateStory, deleteStory })
+  );
 
   const { capabilities } = useConfig();
 

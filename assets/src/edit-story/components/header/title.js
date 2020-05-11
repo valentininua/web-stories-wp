@@ -45,12 +45,16 @@ const Input = styled.input`
 `;
 
 function Title() {
-  const {
-    state: {
-      story: { title, slug },
-    },
-    actions: { updateStory },
-  } = useStory();
+  const { title, slug, updateStory } = useStory(
+    ({
+      state: {
+        // eslint-disable-next-line no-shadow
+        story: { title, slug },
+      },
+      // eslint-disable-next-line no-shadow
+      actions: { updateStory },
+    }) => ({ title, slug, updateStory })
+  );
 
   const { storyId } = useConfig();
 

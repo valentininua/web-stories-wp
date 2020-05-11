@@ -23,12 +23,15 @@ import SingleSelectionMovable from './singleSelectionMovable';
 import MultiSelectionMovable from './multiSelectionMovable';
 
 function Selection() {
-  const {
-    state: { selectedElements },
-  } = useStory();
-  const {
-    state: { editingElement, lastSelectionEvent, nodesById },
-  } = useCanvas();
+  const { selectedElements } = useStory((state) => ({
+    selectedElements: state.state.selectedElements,
+  }));
+  const { editingElement, lastSelectionEvent, nodesById } = useCanvas(
+    ({
+      // eslint-disable-next-line no-shadow
+      state: { editingElement, lastSelectionEvent, nodesById },
+    }) => ({ editingElement, lastSelectionEvent, nodesById })
+  );
 
   // Do not show selection for in editing mode.
   if (editingElement) {

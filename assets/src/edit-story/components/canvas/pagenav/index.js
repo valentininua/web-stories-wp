@@ -46,10 +46,14 @@ const Wrapper = styled.div`
 `;
 
 function PageNav({ isNext }) {
-  const {
-    state: { pages, currentPageIndex },
-    actions: { setCurrentPage },
-  } = useStory();
+  const { pages, currentPageIndex, setCurrentPage } = useStory(
+    ({
+      // eslint-disable-next-line no-shadow
+      state: { pages, currentPageIndex },
+      // eslint-disable-next-line no-shadow
+      actions: { setCurrentPage },
+    }) => ({ pages, currentPageIndex, setCurrentPage })
+  );
   const { isRTL } = useConfig();
   const handleClick = useCallback(() => {
     const newPage = isNext

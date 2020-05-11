@@ -35,9 +35,17 @@ import useUploadWithPreview from './useUploadWithPreview';
 
 function useCanvasGlobalKeys() {
   const {
-    state: { currentPage, selectedElements },
-    actions: { addElements, deleteSelectedElements },
-  } = useStory();
+    currentPage,
+    selectedElements,
+    addElements,
+    deleteSelectedElements,
+  } = useStory(({ // eslint-disable-next-line no-shadow
+    state: { currentPage, selectedElements }, actions: { addElements, deleteSelectedElements } }) => ({
+    currentPage,
+    selectedElements,
+    addElements,
+    deleteSelectedElements,
+  }));
 
   const uploadWithPreview = useUploadWithPreview();
 
