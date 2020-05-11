@@ -76,27 +76,29 @@ describe('TextEdit integration', () => {
       let editor;
       let editLayer;
 
-      beforeEach(() => {
-        fixture.fireEvent.click(frame);
+      beforeEach(async () => {
+        // @todo: hide behind `fireEvent`-like API.
+        await fixture.act(async () => {
+          await karmaPuppeteer.click(frame);
+        });
         editor = fixture.querySelector('[data-testid="textEditor"]');
         editLayer = fixture.querySelector('[data-testid="editLayer"]');
       });
 
       it('should mount editor', () => {
         expect(editor).toBeTruthy();
-        // expect(editorStub.props.editorState).toBeTruthy();
         expect(editLayer).toBeTruthy();
       });
 
       it('should handle a commnad, exit and save', async () => {
         const draft = editor.querySelector('[contenteditable="true"]');
-        await fixture.act(() => {
-          draft.focus();
+        await fixture.act(async () => {
+          await karmaPuppeteer.focus(draft);
         });
 
         // Select all.
-        await fixture.act(() => {
-          document.execCommand('selectAll', false, null);
+        await fixture.act(async () => {
+          await karmaPuppeteer.click(draft, {clickCount: 3});
         });
 
         // @todo: Linux uses ctrlKey.
@@ -115,73 +117,12 @@ describe('TextEdit integration', () => {
           element.id,
         ]);
         expect(storyContext.state.selectedElements[0].content).toEqual(
-          '<strong>hello world!</strong>'
+          '<span style="font-weight: 700">hello world!</span>'
         );
 
         // The content is updated in the frame.
         expect(frame.innerHTML).toEqual(
-          '<strong>hello world!</strong>'
-        );
-      });
-    });
-
-    describe('edit mode with editor stub', () => {
-      let editor;
-      let editLayer;
-
-      beforeEach(() => {
-        editorStub.mockImplementation((props, ref) => (
-          <div ref={ref} contentEditable={true} />
-        ));
-
-        fixture.fireEvent.click(frame);
-        editor = fixture.querySelector('[data-testid="textEditor"]');
-        editLayer = fixture.querySelector('[data-testid="editLayer"]');
-      });
-
-      it('should mount editor', () => {
-        expect(editor).toBeTruthy();
-        expect(editorStub.props.editorState).toBeTruthy();
-        expect(editLayer).toBeTruthy();
-      });
-
-      it('should handle a commnad, exit and save', async () => {
-        // Select all.
-        await fixture.act(() => {
-          const { onChange, editorState } = editorStub.props;
-          onChange(
-            EditorState.forceSelection(
-              editorState,
-              getSelectionForAll(editorState.getCurrentContent())
-            )
-          );
-        });
-
-        // Run a command.
-        await fixture.act(() => {
-          const { handleKeyCommand, editorState } = editorStub.props;
-          return handleKeyCommand('bold', editorState);
-        });
-
-        // Exit edit mode.
-        fixture.fireEvent.mouseDown(editLayer);
-
-        expect(
-          fixture.querySelector('[data-testid="textEditor"]')
-        ).toBeNull();
-
-        // The element is still selected and updated.
-        const storyContext = await fixture.renderHook(() => useStory());
-        expect(storyContext.state.selectedElementIds).toEqual([
-          element.id,
-        ]);
-        expect(storyContext.state.selectedElements[0].content).toEqual(
-          '<strong>hello world!</strong>'
-        );
-
-        // The content is updated in the frame.
-        expect(frame.innerHTML).toEqual(
-          '<strong>hello world!</strong>'
+          '<span style="font-weight: 700">hello world!</span>'
         );
       });
     });
