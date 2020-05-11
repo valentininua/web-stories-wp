@@ -44,7 +44,6 @@ describe('first test', () => {
     };
     const box = {};
 
-    // debugger;
     const { getByTestId } = render(
       <WithMask element={element} box={box} fill>
         <div data-testid="test">{'hello world!'}</div>
@@ -52,5 +51,12 @@ describe('first test', () => {
     );
 
     expect(getByTestId('test').textContent).toEqual('hello world!');
+
+    const style1 = document.createElement('style');
+    style1.id = 'style1';
+    document.head.appendChild(style1);
+  });
+
+  it('should work else', () => {
   });
 });
