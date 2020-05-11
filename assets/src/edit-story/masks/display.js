@@ -18,7 +18,6 @@
  * External dependencies
  */
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
 
 /**
  * Internal dependencies
@@ -34,11 +33,6 @@ const FILL_STYLE = {
   right: 0,
   bottom: 0,
 };
-
-const Container = styled.div`
-  --value: 1px;
-`;
-
 
 export default function WithMask({
   element,
@@ -82,7 +76,7 @@ export default function WithMask({
   }`;
 
   return (
-    <Container
+    <div
       style={{
         ...(fill ? FILL_STYLE : {}),
         ...style,
@@ -102,7 +96,7 @@ export default function WithMask({
         </defs>
       </svg>
       {children}
-    </Container>
+    </div>
   );
 }
 
