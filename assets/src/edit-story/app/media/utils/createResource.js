@@ -41,7 +41,6 @@ import getTypeFromMime from './getTypeFromMime';
  * @property {string|null} title The user-readable title for the resource.
  * @property {string|null} alt The user-readable accessibility label for the
  * resource.
- * @property {string|null} date Date the resource was uploaded to the server.
  * @property {boolean} local Whether the resource has been already uploaded to
  * the server.
  * @property {Object} Object of image sizes.
@@ -66,7 +65,6 @@ function createResource({
   lengthFormatted,
   title,
   alt,
-  date,
   local,
   sizes,
 }) {
@@ -83,7 +81,6 @@ function createResource({
     lengthFormatted,
     title,
     alt,
-    date,
     local,
     sizes,
   };
