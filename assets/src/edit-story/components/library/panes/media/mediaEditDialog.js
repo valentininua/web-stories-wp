@@ -108,7 +108,17 @@ const videoDialogDescription = __(
  * @return {null|*} The dialog element.
  */
 function MediaEditDialog({ resource, showEditDialog, setShowEditDialog }) {
-  const { id, src, title, type, alt, poster, mimeType } = resource;
+  const {
+    id,
+    src,
+    title,
+    width,
+    height,
+    type,
+    alt,
+    poster,
+    mimeType,
+  } = resource;
   const {
     actions: { updateMedia },
   } = useAPI();
@@ -162,9 +172,10 @@ function MediaEditDialog({ resource, showEditDialog, setShowEditDialog }) {
           <MediaTitleText>{title}</MediaTitleText>
           <MediaSizeText>
             {sprintf(
-              /* translators: %(width)d: image width and %(height)d: image height. */
-              __('%(width)d X %(height)d pixels', 'web-stories'),
-              resource
+              /* translators: 1: image width. 2: image height. */
+              __('%1$d X %2$d pixels', 'web-stories'),
+              width,
+              height
             )}
           </MediaSizeText>
           <Input
