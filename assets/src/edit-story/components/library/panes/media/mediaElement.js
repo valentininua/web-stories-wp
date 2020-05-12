@@ -191,7 +191,7 @@ const MediaElement = ({
     // TODO: Set to `true` when Edit and Delete have been fully implemented and merged.
     // Currently we don't have feature flags (#1464) so this is a simple way to keep this feature
     // hidden until fully implemented.
-    const onPointerEnterImage = () => setShowMoreIcon(false);
+    const onPointerEnterImage = () => setShowMoreIcon(true);
     const onPointerLeaveImage = () => setShowMoreIcon(false);
 
     let imageSrc = src;
@@ -234,6 +234,7 @@ const MediaElement = ({
           </CSSTransition>
         )}
         <DropDownMenu
+          resource={resource}
           showDisplayIcon={showMoreIcon}
           menuCallback={menuCallback}
         />
@@ -249,7 +250,7 @@ const MediaElement = ({
     // TODO: Set to `true` when Edit and Delete have been fully implemented and merged.
     // Currently we don't have feature flags (#1464) so this is a simple way to keep this feature
     // hidden until fully implemented.
-    setShowMoreIcon(false);
+    setShowMoreIcon(true);
   };
 
   const onPointerLeaveVideo = () => {
@@ -293,6 +294,7 @@ const MediaElement = ({
         </CSSTransition>
       )}
       <DropDownMenu
+        resource={resource}
         showDisplayIcon={showMoreIcon}
         menuCallback={menuCallback}
       />

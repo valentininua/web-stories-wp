@@ -32,6 +32,7 @@ import { __ } from '@wordpress/i18n';
 import DropDownList from '../../../../components/form/dropDown/list';
 import Popup from '../../../../components/popup';
 import { ReactComponent as More } from '../../../../icons/more_horiz.svg';
+import MediaEditDialog from './mediaEditDialog';
 
 const MoreIcon = styled(More)`
   height: 28px;
@@ -48,29 +49,33 @@ const IconContainer = styled.div`
  * Get a More icon that displays a dropdown menu on click.
  *
  * @param {Object} props Component props.
+ * @param {Object} props.resource Selected media element's resource object.
  * @param {boolean} props.showDisplayIcon If the More icon should be displayed
  * @param {function(boolean)} props.menuCallback Callback for when menu is opened / closed.
  * @return {null|*} Element or null if should not display the More icon.
  */
-function DropDownMenu({ showDisplayIcon, menuCallback }) {
+function DropDownMenu({ resource, showDisplayIcon, menuCallback }) {
   const options = [
     { name: __('Edit', 'web-stories'), value: 'edit' },
     { name: __('Delete', 'web-stories'), value: 'delete' },
   ];
 
   const [showMenu, setShowMenu] = useState(false);
+  const [showEditDialog, setShowEditDialog] = useState(false);
   const moreRef = useRef();
 
+  /* Dropdown Menu logic */
   const onClickMoreIcon = () => {
     setShowMenu(true);
     menuCallback(showMenu);
   };
+
   const handleCurrentValue = (value) => {
     setShowMenu(false);
     menuCallback(showMenu);
     switch (value) {
       case 'edit':
-        // TODO(#354): Edit Media Metadata via Media Library Hover Menu
+        setShowEditDialog(true);
         break;
       case 'delete':
         // TODO(#1319): Media Library - Delete via Dropdown Menu from Hover
@@ -87,29 +92,37 @@ function DropDownMenu({ showDisplayIcon, menuCallback }) {
 
   // Keep icon and menu displayed if menu is open (even if user's mouse leaves the area).
   return (
-    (showDisplayIcon || showMenu) && (
-      <>
-        <IconContainer ref={moreRef}>
-          <MoreIcon
-            onClick={onClickMoreIcon}
-            aria-pressed={showMenu}
-            aria-haspopup={true}
-            aria-expanded={showMenu}
-          />
-        </IconContainer>
-        <Popup anchor={moreRef} isOpen={showMenu} width={160}>
-          <DropDownList
-            handleCurrentValue={handleCurrentValue}
-            options={options}
-            toggleOptions={toggleOptions}
-          />
-        </Popup>
-      </>
-    )
+    <div>
+      {(showDisplayIcon || showMenu) && (
+        <>
+          <IconContainer ref={moreRef}>
+            <MoreIcon
+              onClick={onClickMoreIcon}
+              aria-pressed={showMenu}
+              aria-haspopup={true}
+              aria-expanded={showMenu}
+            />
+          </IconContainer>
+          <Popup anchor={moreRef} isOpen={showMenu} width={160}>
+            <DropDownList
+              handleCurrentValue={handleCurrentValue}
+              options={options}
+              toggleOptions={toggleOptions}
+            />
+          </Popup>
+        </>
+      )}
+      <MediaEditDialog
+        resource={resource}
+        showEditDialog={showEditDialog}
+        setShowEditDialog={setShowEditDialog}
+      />
+    </div>
   );
 }
 
 DropDownMenu.propTypes = {
+  resource: PropTypes.object,
   showDisplayIcon: PropTypes.bool,
   menuCallback: PropTypes.func,
 };

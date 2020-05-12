@@ -37,6 +37,7 @@ function getResourceFromAttachment(attachment) {
       length_formatted: lengthFormatted,
       sizes,
     },
+    date,
     title: { raw: title },
     description: { raw: description },
     mime_type: mimeType,
@@ -67,6 +68,7 @@ function getResourceFromAttachment(attachment) {
     alt: alt || description || title,
     title,
     sizes,
+    date,
     local: false,
   });
 }
