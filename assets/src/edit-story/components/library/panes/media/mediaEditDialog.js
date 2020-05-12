@@ -17,7 +17,7 @@
 /**
  * External dependencies
  */
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import PropTypes from 'prop-types';
 import { useCallback, useEffect, useState } from 'react';
 
@@ -33,14 +33,40 @@ import { useAPI } from '../../../../app/api';
 import Dialog from '../../../../components/dialog';
 import { Plain } from '../../../../components/button';
 
+const styledMediaThumbnail = css`
+  display: flex;
+  width: 152px;
+  margin-right: 28px;
+`;
+
 const Image = styled.img`
-  width: 100px;
-  height: 100px;
+  ${styledMediaThumbnail}
 `;
 
 const Video = styled.video`
-  width: 100px;
-  height: 100px;
+  ${styledMediaThumbnail}
+`;
+
+const DialogBody = styled.div`
+  max-width: 452px;
+  display: flex;
+  justify-content: left;
+  align-items: flex-start;
+`;
+
+const MetadataTextContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+const MediaTitleText = styled.div`
+  font-weight: bold;
+  color: #3c4043;
+`;
+
+const MediaSizeText = styled.div`
+  font-size: 16px;
+  color: #3c4043;
 `;
 
 const Input = styled.input`
@@ -48,6 +74,17 @@ const Input = styled.input`
   border: 1px solid #d3d4d4;
   box-sizing: border-box;
   border-radius: 4px;
+  font-size: 15px;
+  padding: 7px 10px;
+  margin-top: 20px;
+  margin-bottom: 4px;
+`;
+
+const DialogDescription = styled.div`
+  font-size: 12px;
+  line-height: 16px;
+  color: #202124;
+  opacity: 0.54;
 `;
 
 const imageDialogTitle = __('Edit Image', 'web-stories');
@@ -100,6 +137,7 @@ function MediaEditDialog({ resource, showEditDialog, setShowEditDialog }) {
     <Dialog
       open={showEditDialog}
       onClose={() => setShowEditDialog(false)}
+      width={'500px'}
       title={type == 'image' ? imageDialogTitle : videoDialogTitle}
       actions={
         <>
@@ -112,26 +150,34 @@ function MediaEditDialog({ resource, showEditDialog, setShowEditDialog }) {
         </>
       }
     >
-      {type == 'image' ? (
-        <Image src={src} width={100} height={100} alt={alt} loading={'lazy'} />
-      ) : (
-        <Video key={src} poster={poster} preload="none" muted>
-          <source src={src} type={mimeType} />
-        </Video>
-      )}
-      {title}
-      {sprintf(
-        /* translators: %(width)d: image width and %(height)d: image height. */
-        __('%(width)d X %(height)d pixels', 'web-stories'),
-        resource
-      )}
-      <Input
-        value={altText}
-        type="text"
-        placeholder={__('Alt text', 'web-stories')}
-        onChange={handleAltTextChange}
-      />
-      {type == 'image' ? imageDialogDescription : videoDialogDescription}
+      <DialogBody>
+        {type == 'image' ? (
+          <Image src={src} alt={alt} loading={'lazy'} />
+        ) : (
+          <Video key={src} poster={poster} preload="none" muted>
+            <source src={src} type={mimeType} />
+          </Video>
+        )}
+        <MetadataTextContainer>
+          <MediaTitleText>{title}</MediaTitleText>
+          <MediaSizeText>
+            {sprintf(
+              /* translators: %(width)d: image width and %(height)d: image height. */
+              __('%(width)d X %(height)d pixels', 'web-stories'),
+              resource
+            )}
+          </MediaSizeText>
+          <Input
+            value={altText}
+            type="text"
+            placeholder={__('Alt text', 'web-stories')}
+            onChange={handleAltTextChange}
+          />
+          <DialogDescription>
+            {type == 'image' ? imageDialogDescription : videoDialogDescription}
+          </DialogDescription>
+        </MetadataTextContainer>
+      </DialogBody>
     </Dialog>
   );
 }
