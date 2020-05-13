@@ -117,7 +117,7 @@ module.exports = function (config) {
     puppeteerLauncher: {
       puppeteer: {
         // headless: config.headless || false,
-        headless: false,
+        headless: true,
         slowMo: config.slowMo || 0,
         // product: 'chrome',
         // defaultViewport: null,
