@@ -1,4 +1,4 @@
 {
   "video": false,
-  "baseUrl": "http://192.168.1.48:8899"
+  "baseUrl": "http://localhost:8899"
 }

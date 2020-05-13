@@ -53,7 +53,7 @@ const logWithLabel = label => (...args) => console.log(label, ...args);
       // Setup
       log('Login, we can skip it in the future with static build');
       await page.goto(
-        'http://192.168.1.48:8899/wp-admin/post-new.php?post_type=web-story',
+        'http://localhost:8899/wp-admin/post-new.php?post_type=web-story',
         { waitUntil: 'networkidle' }
       );
       await page.fill('#user_login', 'admin');

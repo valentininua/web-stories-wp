@@ -4,7 +4,7 @@ const browserType = process.env.BROWSER;
 describe('Text element editor', () => {
   beforeAll(async () => {
     await page.goto(
-      'http://192.168.1.48:8899/wp-admin/post-new.php?post_type=web-story',
+      'http://localhost:8899/wp-admin/post-new.php?post_type=web-story',
       { waitUntil: 'networkidle' }
     );
     await page.fill('#user_login', 'admin');
