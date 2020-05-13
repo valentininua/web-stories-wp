@@ -35,6 +35,7 @@ import { PAGE_HEIGHT } from '../../../constants';
 import { useFont } from '../../../app/font';
 import { getCommonValue } from '../utils';
 import objectPick from '../../../utils/objectPick';
+import useRichTextFormatting from './useRichTextFormatting';
 import getFontWeights from './getFontWeights';
 
 const Space = styled.div`
@@ -52,7 +53,11 @@ function FontControls({ selectedElements, pushUpdate }) {
     ({ font }) => font?.family
   );
   const fontSize = getCommonValue(selectedElements, 'fontSize');
-  const fontWeight = getCommonValue(selectedElements, 'fontWeight');
+
+  const {
+    textInfo: { fontWeight },
+    handlers: { handleSelectFontWeight },
+  } = useRichTextFormatting(selectedElements, pushUpdate);
 
   const {
     state: { fonts },
@@ -72,15 +77,6 @@ function FontControls({ selectedElements, pushUpdate }) {
             value={fontFamily}
             onChange={(value) => {
               const fontObj = fonts.find((item) => item.value === value);
-              const { weights } = fontObj;
-
-              // Find the nearest font weight from the available font weight list
-              const newFontWeight = weights.reduce((a, b) =>
-                Math.abs(parseInt(b) - fontWeight) <
-                Math.abs(parseInt(a) - fontWeight)
-                  ? b
-                  : a
-              );
 
               pushUpdate(
                 {
@@ -94,7 +90,6 @@ function FontControls({ selectedElements, pushUpdate }) {
                       'variants',
                     ]),
                   },
-                  fontWeight: parseInt(newFontWeight),
                 },
                 true
               );
@@ -108,11 +103,10 @@ function FontControls({ selectedElements, pushUpdate }) {
             <DropDown
               data-testid="font.weight"
               ariaLabel={__('Font weight', 'web-stories')}
+              placeholder={__('(multiple)', 'web-stories')}
               options={fontWeights}
               value={fontWeight}
-              onChange={(value) =>
-                pushUpdate({ fontWeight: parseInt(value) }, true)
-              }
+              onChange={handleSelectFontWeight}
             />
             <Space />
           </>
