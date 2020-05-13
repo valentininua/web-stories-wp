@@ -41,6 +41,7 @@ function ColorInput({
   value,
   label,
   colorPickerActions,
+  dataTestId,
 }) {
   const handleOpacityChange = useCallback(
     (newOpacity) => onChange(applyOpacityChange(value, newOpacity)),
@@ -54,6 +55,7 @@ function ColorInput({
         hasOpacity={hasOpacity}
         value={value}
         label={label}
+        dataTestId={dataTestId}
         colorPickerActions={colorPickerActions}
       />
       {hasOpacity && (
@@ -64,11 +66,12 @@ function ColorInput({
 }
 
 ColorInput.propTypes = {
-  value: PropTypes.oneOfType([PatternPropType, PropTypes.string]),
+  value: PatternPropType,
   hasGradient: PropTypes.bool,
   hasOpacity: PropTypes.bool,
   onChange: PropTypes.func.isRequired,
   label: PropTypes.string,
+  dataTestId: PropTypes.string,
   colorPickerActions: PropTypes.func,
 };
 

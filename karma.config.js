@@ -33,6 +33,11 @@ const webpackConfigArray = require('./webpack.config');
 
 module.exports = function (config) {
   config.set({
+    client: {
+      jasmine: {
+        timeoutInterval: 60 * 1000,
+      },
+    },
     plugins: [
       'karma-chrome-launcher',
       'karma-jasmine',
@@ -111,7 +116,8 @@ module.exports = function (config) {
 
     puppeteerLauncher: {
       puppeteer: {
-        headless: config.headless || false,
+        // headless: config.headless || false,
+        headless: false,
         slowMo: config.slowMo || 0,
         // product: 'chrome',
         // defaultViewport: null,

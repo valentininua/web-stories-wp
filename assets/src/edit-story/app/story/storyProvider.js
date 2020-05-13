@@ -140,6 +140,9 @@ function StoryProvider({ storyId, children }) {
     },
   };
 
+  // Expose to E2E tests
+  window.storyData = { pages, current, selection, story };
+
   return <Context.Provider value={state}>{children}</Context.Provider>;
 }
 

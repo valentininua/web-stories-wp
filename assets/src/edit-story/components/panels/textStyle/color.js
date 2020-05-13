@@ -116,7 +116,7 @@ function ColorControls({ selectedElements, pushUpdate }) {
       <Row>
         <Label>{__('Text', 'web-stories')}</Label>
         <Color
-          data-testid="text.color"
+          dataTestId="text.color"
           value={color}
           onChange={handleSetColor}
           colorPickerActions={getColorPickerActions}

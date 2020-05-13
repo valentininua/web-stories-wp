@@ -80,6 +80,7 @@ function ColorPreview({
   value,
   label,
   colorPickerActions,
+  dataTestId,
 }) {
   const isMultiple = value === MULTIPLE_VALUE;
   value = isMultiple ? '' : value;
@@ -168,11 +169,11 @@ function ColorPreview({
     // If editable, only the visual preview component is a button
     // And the text is an input field
     return (
-      <Preview ref={ref}>
+      <Preview ref={ref} data-testid={dataTestId}>
         <VisualPreview role="status" style={previewStyle} {...buttonProps} />
         <TextualInput
           aria-label={`${inputLabel}: ${label}`}
-          value={hexInputValue ?? ''}
+          value={hexInputValue}
           onChange={handleInputChange}
           onBlur={handleInputBlur}
         />
@@ -182,7 +183,7 @@ function ColorPreview({
 
   // If not editable, the whole component is a button
   return (
-    <Preview ref={ref} {...buttonProps}>
+    <Preview ref={ref} data-testid={dataTestId} {...buttonProps}>
       <VisualPreview role="status" style={previewStyle} />
       <TextualPreview>
         {isMultiple
