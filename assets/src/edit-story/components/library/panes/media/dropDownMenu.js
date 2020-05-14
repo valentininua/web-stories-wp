@@ -33,6 +33,8 @@ import { useAPI } from '../../../../app/api';
 import DropDownList from '../../../../components/form/dropDown/list';
 import Popup from '../../../../components/popup';
 import { ReactComponent as More } from '../../../../icons/more_horiz.svg';
+import { useSnackbar } from '../../../../app/snackbar';
+import { useMedia } from '../../../../app/media';
 
 const MoreIcon = styled(More)`
   height: 28px;
@@ -62,6 +64,10 @@ function DropDownMenu({ mediaId, showDisplayIcon, menuCallback }) {
     { name: __('Edit', 'web-stories'), value: 'edit' },
     { name: __('Delete', 'web-stories'), value: 'delete' },
   ];
+  const { showSnackbar } = useSnackbar();
+  const {
+    actions: { deleteMediaElement },
+  } = useMedia();
 
   const [showMenu, setShowMenu] = useState(false);
   const [shouldDelete, setShouldDelete] = useState(false);
@@ -76,15 +82,17 @@ function DropDownMenu({ mediaId, showDisplayIcon, menuCallback }) {
     const deleteMediaItem = async () => {
       try {
         await deleteMedia(mediaId);
-        // TODO Refresh media library
+        deleteMediaElement(mediaId);
       } catch (err) {
-        // TODO Display error message
+        showSnackbar({
+          message: __('Failed to delete item', 'web-stories'),
+        });
       } finally {
         setShouldDelete(false);
       }
     };
     shouldDelete ? deleteMediaItem() : null;
-  }, [deleteMedia, mediaId, shouldDelete]);
+  }, [deleteMedia, deleteMediaElement, mediaId, shouldDelete, showSnackbar]);
 
   const handleCurrentValue = (value) => {
     setShowMenu(false);
