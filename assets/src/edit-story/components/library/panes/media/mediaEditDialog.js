@@ -32,6 +32,8 @@ import { __, sprintf } from '@wordpress/i18n';
 import { useAPI } from '../../../../app/api';
 import Dialog from '../../../../components/dialog';
 import { Plain } from '../../../../components/button';
+import { useSnackbar } from '../../../../app/snackbar';
+import UseMedia from '../../../../app/media/useMedia';
 
 const styledMediaThumbnail = css`
   display: flex;
@@ -70,7 +72,7 @@ const MediaSizeText = styled.div`
 `;
 
 const Input = styled.input`
-  background: #ffffff;
+  background: ${({ theme }) => theme.colors.fg.v13};
   border: 1px solid #d3d4d4;
   box-sizing: border-box;
   border-radius: 4px;
@@ -83,8 +85,7 @@ const Input = styled.input`
 const DialogDescription = styled.div`
   font-size: 12px;
   line-height: 16px;
-  color: #202124;
-  opacity: 0.54;
+  color: ${({ theme }) => theme.grayout};
 `;
 
 const imageDialogTitle = __('Edit Image', 'web-stories');
@@ -122,6 +123,10 @@ function MediaEditDialog({ resource, showEditDialog, setShowEditDialog }) {
   const {
     actions: { updateMedia },
   } = useAPI();
+  const {
+    actions: { updateMediaElement },
+  } = UseMedia();
+  const { showSnackbar } = useSnackbar();
   const [altText, setAltText] = useState(alt);
   const [shouldUpdate, setShouldUpdate] = useState(false);
 
@@ -131,23 +136,38 @@ function MediaEditDialog({ resource, showEditDialog, setShowEditDialog }) {
 
   useEffect(() => {
     const updateMediaItem = async () => {
+      setShouldUpdate(false);
       try {
+        // Update server.
         await updateMedia(id, { alt_text: altText });
+        // Update internal state.
+        updateMediaElement({ id, alt: altText });
         setShowEditDialog(false);
       } catch (err) {
-        // TODO Display error message
-      } finally {
-        setShouldUpdate(false);
+        showSnackbar({
+          message: __(
+            'Failed to update media item, please try again.',
+            'web-stories'
+          ),
+        });
       }
     };
     shouldUpdate ? updateMediaItem() : null;
-  }, [altText, id, setShowEditDialog, shouldUpdate, updateMedia]);
+  }, [
+    altText,
+    id,
+    resource,
+    setShowEditDialog,
+    shouldUpdate,
+    showSnackbar,
+    updateMedia,
+    updateMediaElement,
+  ]);
 
   return (
     <Dialog
       open={showEditDialog}
       onClose={() => setShowEditDialog(false)}
-      width={'500px'}
       title={type == 'image' ? imageDialogTitle : videoDialogTitle}
       actions={
         <>
@@ -173,7 +193,7 @@ function MediaEditDialog({ resource, showEditDialog, setShowEditDialog }) {
           <MediaSizeText>
             {sprintf(
               /* translators: 1: image width. 2: image height. */
-              __('%1$d X %2$d pixels', 'web-stories'),
+              __('%1$d x %2$d pixels', 'web-stories'),
               width,
               height
             )}

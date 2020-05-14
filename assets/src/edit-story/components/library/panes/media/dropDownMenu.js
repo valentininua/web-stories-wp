@@ -112,11 +112,13 @@ function DropDownMenu({ resource, showDisplayIcon, menuCallback }) {
           </Popup>
         </>
       )}
-      <MediaEditDialog
-        resource={resource}
-        showEditDialog={showEditDialog}
-        setShowEditDialog={setShowEditDialog}
-      />
+      {showEditDialog && (
+        <MediaEditDialog
+          resource={resource}
+          showEditDialog={showEditDialog}
+          setShowEditDialog={setShowEditDialog}
+        />
+      )}
     </div>
   );
 }
