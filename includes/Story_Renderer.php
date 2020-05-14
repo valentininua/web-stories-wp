@@ -326,6 +326,68 @@ class Story_Renderer {
 	}
 
 	/**
+	 * Get the AmpProject\Optimizer configuration object to use.
+	 *
+	 * @return \AmpProject\Optimizer\Configuration Optimizer configuration to use.
+	 */
+	private function get_optimizer_configuration() {
+		$transformers = \AmpProject\Optimizer\Configuration::DEFAULT_TRANSFORMERS;
+		array_unshift( $transformers, \AmpProject\AmpWP\Transformer\AmpSchemaOrgMetadata::class );
+
+		$configuration = [ \AmpProject\Optimizer\Configuration::KEY_TRANSFORMERS => $transformers ];
+		$config        = new \AmpProject\Optimizer\Configuration( $configuration );
+		$config->registerConfigurationClass(
+			\AmpProject\AmpWP\Transformer\AmpSchemaOrgMetadata::class,
+			\AmpProject\AmpWP\Transformer\AmpSchemaOrgMetadataConfiguration::class
+		);
+
+		return $config;
+	}
+
+	/**
+	 * Optimizes the resulting markup using AMP Optimizer if available.
+	 *
+	 * @param string $content Story markup.
+	 *
+	 * @return string Filtered content.
+	 */
+	protected function optimize_markup( $content ) {
+		if ( ! class_exists( '\AmpProject\Optimizer\TransformationEngine' ) ) {
+			return $content;
+		}
+
+		$enable_optimizer = true;
+
+		/** This filter is documented in amp-wp/includes/class-amp-theme-support.php */
+		$enable_optimizer = apply_filters( 'amp_enable_optimizer', $enable_optimizer );
+
+		if ( $enable_optimizer ) {
+			$errors         = new \AmpProject\Optimizer\ErrorCollection();
+			$optimizer      = new \AmpProject\Optimizer\TransformationEngine( $this->get_optimizer_configuration() );
+			$optimized_html = $optimizer->optimizeHtml( $content, $errors );
+
+			if ( count( $errors ) === 0 ) {
+				return $optimized_html;
+			}
+
+			$error_messages = array_map(
+				static function( \AmpProject\Optimizer\Error $error ) {
+					return ' - ' . $error->getCode() . ': ' . $error->getMessage();
+				},
+				iterator_to_array( $errors )
+			);
+
+			return str_replace(
+				'</html>',
+				"\n" . '<!---' . "\n" . 'AMP optimization could not be completed due to the following:' . "\n" . implode( "\n", $error_messages ) . "\n" . '-->' . "\n" . '</html>',
+				$content
+			);
+		}
+
+		return $content;
+	}
+
+	/**
 	 * Renders the story.
 	 *
 	 * @return string The complete HTML markup for the story.
@@ -340,6 +402,7 @@ class Story_Renderer {
 		$markup = $this->add_publisher_logo( $markup );
 		$markup = $this->replace_body_start_tag( $markup );
 		$markup = $this->replace_body_end_tag( $markup );
+		//$markup = $this->optimize_markup( $markup );
 		return $markup;
 	}
 }
