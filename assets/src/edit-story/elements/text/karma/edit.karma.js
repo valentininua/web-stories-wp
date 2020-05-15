@@ -75,6 +75,7 @@ describe('TextEdit integration', () => {
     describe('edit mode', () => {
       let editor;
       let editLayer;
+      let boldToggle;
 
       beforeEach(async () => {
         // @todo: hide behind `fireEvent`-like API.
@@ -83,6 +84,7 @@ describe('TextEdit integration', () => {
         });
         editor = fixture.querySelector('[data-testid="textEditor"]');
         editLayer = fixture.querySelector('[data-testid="editLayer"]');
+        boldToggle = fixture.querySelector('[data-testid="boldToggle"]');
       });
 
       it('should mount editor', () => {
@@ -101,8 +103,12 @@ describe('TextEdit integration', () => {
           await karmaPuppeteer.click(draft, {clickCount: 3});
         });
 
+        expect(boldToggle.checked).toEqual(false);
+
         // @todo: Linux uses ctrlKey.
         fireEvent.keyDown(draft, {key: 'b', code: 'KeyB', keyCode: 66, metaKey: true});
+
+        expect(boldToggle.checked).toEqual(true);
 
         // Exit edit mode.
         fixture.fireEvent.mouseDown(editLayer);
