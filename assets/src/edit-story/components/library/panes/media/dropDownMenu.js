@@ -80,15 +80,14 @@ function DropDownMenu({ mediaId, showDisplayIcon, menuCallback }) {
 
   useEffect(() => {
     const deleteMediaItem = async () => {
+      setShouldDelete(false);
       try {
         await deleteMedia(mediaId);
-        deleteMediaElement(mediaId);
+        deleteMediaElement({ id: mediaId });
       } catch (err) {
         showSnackbar({
-          message: __('Failed to delete item', 'web-stories'),
+          message: __('Failed to delete media item.', 'web-stories'),
         });
-      } finally {
-        setShouldDelete(false);
       }
     };
     shouldDelete ? deleteMediaItem() : null;
@@ -113,8 +112,6 @@ function DropDownMenu({ mediaId, showDisplayIcon, menuCallback }) {
     setShowMenu(false);
     menuCallback(showMenu);
   };
-
-  useEffect(() => menuCallback(showMenu), [showMenu, menuCallback]);
 
   // Keep icon and menu displayed if menu is open (even if user's mouse leaves the area).
   return (
