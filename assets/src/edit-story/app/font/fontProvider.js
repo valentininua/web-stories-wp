@@ -75,6 +75,7 @@ function FontProvider({ children }) {
     const newFontList = fontFamilyList.filter(
       (fontName) => loadedFontFamily.current.indexOf(fontName) < 0
     );
+    loadedFontFamily.current = [...loadedFontFamily.current, ...newFontList];
     if (!newFontList?.length) {
       return Promise.resolve('');
     }
@@ -82,10 +83,14 @@ function FontProvider({ children }) {
       `${GOOGLE_MENU_FONT_URL}?family=${encodeURIComponent(
         newFontList.join('|')
       )}&subset=menu`
-    ).then((response) => {
-      loadedFontFamily.current = [...loadedFontFamily.current, ...newFontList];
-      return response.text();
-    });
+    )
+      .then((response) => {
+        return response.text();
+      })
+      .catch(() => {
+        loadedFontFamily.current.length =
+          loadedFontFamily.current.length - newFontList.length;
+      });
   }, []);
 
   const state = {
